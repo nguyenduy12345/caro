@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+body{
+        width: 60vw;
+        margin: 130px auto;
+        text-align: center;
+    }
+.chess_board {
+    display: grid;
+    grid-template-columns: repeat(3, 80px);
+    grid-template-rows: repeat(3, 80px);
+    justify-content: center;
+    margin-bottom: 20px;
+}
+.box {
+    width: 80px;
+    height: 80px;
+    border: 1px solid black;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 60px;
+    cursor: pointer;
+}
+.box:hover {
+    background-color: rgb(227, 232, 233);
+}
+button{
+    width: 65px;
+    height: 30px;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
+button#start{
+    background-color: gray;
+}
+button#replay{
+    background-color: yellow;
+}
+button:hover{
+    background-color: black;
+    color: white;
+}
+.red{
+    color: red;
+}
+.box_win{
+    background-color: bisque;
+}
+p#message{
+    color: red;
+    font-size: 20px;
+    font-weight: bold;
+    letter-spacing: 3px;   
+}
+p#message_replay{
+    color: red;
+    font-size: 20px;
+    font-weight: bold;
+    letter-spacing: 3px;   
+}
+    </style>
+<body>
+    <p>Lượt người chơi: <span id="turn">X</span></p>
+    <h3 id="title">Bấm bắt đầu để chơi</h3>
+    <div id="chess_board" class="chess_board"></div>
+    <button id="start" onclick="startGame()">Bắt đầu</button>
+    <button id="replay" onclick="rePlayGame()">Chơi lại</button>
+    <p id="message"></p>
+    <p id="message_replay"></p>
+
+
+<script>
+    let title = document.querySelector('#title')
+    let message = document.querySelector('#message')
+    let messageRePlay = document.querySelector('#message_replay')
+    const chessBoard = document.getElementById('chess_board');
+
+    // BUILD BOARD
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            const box = document.createElement('div');
+            box.classList.add('box');
+            box.setAttribute('row', `${i}`)
+            box.setAttribute('col', `${j}`)
+            chessBoard.appendChild(box);
+        }
+    }
+    let listBox = document.querySelectorAll('.box')
+    let turn = document.querySelector('#turn')
+    let currentPlayer = 'X';
+//BTN START
+for(let abox of listBox){
+    if(!abox.textContent){
+        function startGame(){
+    if(title){
+        title.innerText = "Hãy chiến đấu hết mình!"
+        // for(let box of listBox){
+        //     box.innerText = ""
+        //     box.classList.remove('red')
+        //     message.innerText = ""
+        //     messageRePlay.innerText = ""
+        //     box.classList.remove('box_win')
+        // }
+    }
+    for(let abox of listBox){
+        abox.addEventListener('click', function handleClick(event) {
+        let box = event.target
+        if (box.textContent === '') {
+            box.textContent = currentPlayer;
+            currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+            turn.innerText = currentPlayer
+        }
+        if(box.textContent === 'O'){
+            box.classList.add('red')
+        }
+        if(checkWin('X')){
+            currentPlayer = "O"
+        }
+        if(checkWin('O')){
+            currentPlayer = "X"
+        } 
+        })
+    }        
+}
+    }
+}
+//BTN REPLAY
+function rePlayGame(){
+    if(message.textContent.length != 0){
+        title.innerText = "Hãy chiến đấu hết mình!"
+        for(let box of listBox){
+            box.innerText = ""
+            box.classList.remove('red')
+            message.innerText = ""
+            messageRePlay.innerText = ""
+            box.classList.remove('box_win')
+        }    
+    }
+}
+
+//CHECK WIN
+function checkWin(value){
+    let checkWinRow1 = listBox[0].textContent === value &&
+                      listBox[1].textContent === value &&
+                      listBox[2].textContent === value 
+    let checkWinRow2 = listBox[3].textContent === value &&
+                      listBox[4].textContent === value &&
+                      listBox[5].textContent === value                  
+    let checkWinRow3 = listBox[6].textContent === value &&
+                      listBox[7].textContent === value &&
+                      listBox[8].textContent === value
+    if(checkWinRow1){
+        message.innerText = `Player ${value}: win!`
+        messageRePlay.innerText = "Bấm chơi lại để bắt đầu lại"
+        listBox[0].classList.add('box_win')
+        listBox[1].classList.add('box_win')
+        listBox[2].classList.add('box_win') 
+    }
+    if(checkWinRow2){
+        message.innerText = `Player ${value}: win!`
+        messageRePlay.innerText = "Bấm chơi lại để bắt đầu lại"
+        listBox[3].classList.add('box_win')
+        listBox[4].classList.add('box_win')
+        listBox[5].classList.add('box_win') 
+    }
+    if(checkWinRow3){
+        message.innerText = `Player ${value}: win!`
+        messageRePlay.innerText = "Bấm chơi lại để bắt đầu lại"
+        listBox[6].classList.add('box_win')
+        listBox[7].classList.add('box_win')
+        listBox[8].classList.add('box_win') 
+    }
+    let checkWinCol1 = listBox[0].textContent === value &&
+                      listBox[3].textContent === value &&
+                      listBox[6].textContent === value 
+    let checkWinCol2 = listBox[1].textContent === value &&
+                      listBox[4].textContent === value &&
+                      listBox[7].textContent === value                  
+    let checkWinCol3 = listBox[2].textContent === value &&
+                      listBox[5].textContent === value &&
+                      listBox[8].textContent === value
+    if(checkWinCol1){
+        message.innerText = `Player ${value}: win!`
+        messageRePlay.innerText = "Bấm chơi lại để bắt đầu lại"
+        listBox[0].classList.add('box_win')
+        listBox[3].classList.add('box_win')
+        listBox[6].classList.add('box_win') 
+    }
+    if(checkWinCol2){
+        message.innerText = `Player ${value}: win!`
+        messageRePlay.innerText = "Bấm chơi lại để bắt đầu lại"
+        listBox[1].classList.add('box_win')
+        listBox[4].classList.add('box_win')
+        listBox[7].classList.add('box_win') 
+    }
+    if(checkWinCol3){
+        message.innerText = `Player ${value}: win!`
+        messageRePlay.innerText = "Bấm chơi lại để bắt đầu lại"
+        listBox[2].classList.add('box_win')
+        listBox[5].classList.add('box_win')
+        listBox[8].classList.add('box_win') 
+    }
+    let skewRight = listBox[0].textContent === value &&
+                    listBox[4].textContent === value &&
+                    listBox[8].textContent === value
+    if(skewRight){
+            message.innerText = `Player ${value}: win!`
+            messageRePlay.innerText = "Bấm chơi lại để bắt đầu lại"
+            listBox[0].classList.add('box_win')
+            listBox[4].classList.add('box_win')
+            listBox[8].classList.add('box_win')           
+        }           
+    let skewLeft =  listBox[2].textContent === value &&
+                    listBox[4].textContent === value &&
+                    listBox[6].textContent === value
+        if(skewLeft){
+            message.innerText = `Player ${value}: win!`
+            messageRePlay.innerText = "Bấm chơi lại để bắt đầu lại"
+            listBox[2].classList.add('box_win')
+            listBox[4].classList.add('box_win')
+            listBox[6].classList.add('box_win') 
+        } 
+}
+</script>
+</body>
+</html>
